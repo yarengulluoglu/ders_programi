@@ -49,6 +49,10 @@ class _PomodoroEkraniState extends State<PomodoroEkrani> {
       debugPrint("Ses çalma komutu başarıyla çalıştı!");
     } catch (e) {
       debugPrint("SES ÇALINAMADI HATA: $e");
+      
+      // Ses hatasını göstermeden önceki güvenlik kontrolü
+      if (!mounted) return; 
+      
       // Hatayı ekranda kırmızı bir uyarı olarak göster
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -61,8 +65,16 @@ class _PomodoroEkraniState extends State<PomodoroEkrani> {
 
     if (!_molaMi) {
       await VeritabaniYardimcisi.instance.istatistikEkle('Pomodoro', 25);
+      
+      // Veritabanı kaydından sonra dialog açmadan önceki güvenlik kontrolü
+      if (!mounted) return; 
+      
       _alarmDialogGoster("Çalışma Bitti!", "Şimdi 10 dakikalık mola başlıyor.", true);
     } else {
+      
+      // Try-catch içindeki await'lerden sonra dialog açmadan önceki güvenlik kontrolü
+      if (!mounted) return;
+      
       _alarmDialogGoster("Mola Bitti!", "Yeniden odaklanma vakti.", false);
     }
   }

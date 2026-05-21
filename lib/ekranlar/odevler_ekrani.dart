@@ -45,11 +45,12 @@ class _OdevlerEkraniState extends State<OdevlerEkrani> {
     _baslikController.clear();
     _dersController.clear();
     
-    // Listeyi güncelle ve dialog penceresini kapat
+    // Listeyi güncelle
     _verileriYukle();
-    if (context.mounted) {
-      Navigator.pop(context);
-    }
+    
+    // State'in kendi mounted özelliğini kontrol ediyoruz
+    if (!mounted) return;
+    Navigator.pop(context);
   }
 
   void _odevEkleDialogAc() {

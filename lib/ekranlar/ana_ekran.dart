@@ -4,7 +4,7 @@ import 'odevler_ekrani.dart';
 import 'pomodoro_ekrani.dart';
 import 'kronometre_ekrani.dart';
 
-class AnaEkran extends StatefulWidget {
+class AnaEkran extends StatefulWidget{
   const AnaEkran({super.key});
 
   @override
@@ -14,7 +14,7 @@ class AnaEkran extends StatefulWidget {
 class _AnaEkranState extends State<AnaEkran> {
   int _seciliSayfaIndeksi = 0;
 
-  final List<Widget> _sayfalar = [
+  final List<Widget>_sayfalar = [
     const DerslerEkrani(),
     const OdevlerEkrani(),
     const PomodoroEkrani(),

@@ -22,6 +22,10 @@ class _KronometreEkraniState extends State<KronometreEkrani> {
       int gecenDakika = _kronometre.elapsed.inMinutes;
       if (gecenDakika > 0) {
         await VeritabaniYardimcisi.instance.istatistikEkle('Serbest Çalışma (Kronometre)', gecenDakika);
+        
+        // İşte o hayat kurtaran güvenlik kontrolü burada:
+        if (!mounted) return;
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('$gecenDakika dakikalık çalışma kaydedildi.')),
         );
