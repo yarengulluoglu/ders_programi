@@ -46,34 +46,34 @@ class _DerslerEkraniState extends State<DerslerEkrani> {
     return Scaffold(
       appBar: AppBar(title: const Text('Ders Programım'), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
       body: _kayitliDersler.isEmpty
-          ? const Center(child: Text('Ders Yok.'))
-          : ListView.builder(
-              itemCount: _kayitliDersler.length,
-              itemBuilder: (ctx, indeks) {
-                final ders = _kayitliDersler[indeks];
-                
-                final tarihBolenleri = ders.gun.split('-');
-                String gosterilecekTarih = ders.gun;
-                if (tarihBolenleri.length == 3) {
-                  gosterilecekTarih = "${tarihBolenleri[2]}/${tarihBolenleri[1]}/${tarihBolenleri[0]}";
-                }
-
-                return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: ListTile(
-                    leading: const CircleAvatar(child: Icon(Icons.book)),
-                    title: Text(ders.isim, style: const TextStyle(fontWeight: FontWeight.bold)),
-                    
-                    // İŞTE BURASI: \n kullanarak tarih ve saati alt alta aldık
-                    subtitle: Text('Tarih: $gosterilecekTarih\nSaat: ${ders.baslangicSaati}'),
-                    
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _dersSil(ders.id),
-                    ),
-                  ),
-                );
-              },
+          ? const Center(child: Text('Ders Yok. Sağ alttan ekleyebilirsiniz.'))
+          : SingleChildScrollView( // Ekrana sığmazsa aşağı kaydırma
+              scrollDirection: Axis.vertical,
+              child: SingleChildScrollView( // Ekrana sığmazsa sağa kaydırma
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                headingRowColor: WidgetStateProperty.all(Colors.blue.shade100),
+                  columns: const [
+                    DataColumn(label: Text('Ders', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Gün', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Saat', style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text('Sil', style: TextStyle(fontWeight: FontWeight.bold))),
+                  ],
+                  rows: _kayitliDersler.map((ders) {
+                    return DataRow(cells: [
+                      DataCell(Text(ders.isim)),
+                      DataCell(Text(ders.gun)),
+                      DataCell(Text(ders.baslangicSaati)),
+                      DataCell(
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _dersSil(ders.id),
+                        ),
+                      ),
+                    ]);
+                  }).toList(),
+                ),
+              ),
             ),
       floatingActionButton: FloatingActionButton(onPressed: _dersEklemeEkraniniAc, child: const Icon(Icons.add)),
     );

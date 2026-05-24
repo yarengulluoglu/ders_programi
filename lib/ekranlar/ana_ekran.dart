@@ -30,7 +30,11 @@ class _AnaEkranState extends State<AnaEkran> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _sayfalar[_seciliSayfaIndeksi],
+      // İŞTE ÇÖZÜM BURADA: IndexedStack ile sayfaları arka planda canlı tutuyoruz!
+      body: IndexedStack(
+        index: _seciliSayfaIndeksi,
+        children: _sayfalar,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _seciliSayfaIndeksi,
         onTap: _sayfaDegistir,

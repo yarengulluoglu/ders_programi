@@ -14,22 +14,8 @@ class _YeniDersEkraniState extends State<YeniDersEkrani> {
   final _isimController = TextEditingController();
   final _saatController = TextEditingController();
   
-  DateTime _secilenTarih = DateTime.now();
-
-  void _tarihSec() async {
-    final secilen = await showDatePicker(
-      context: context,
-      initialDate: _secilenTarih,
-      firstDate: DateTime.now(), 
-      lastDate: DateTime(2030),
-    );
-
-    if (secilen != null) {
-      setState(() {
-        _secilenTarih = secilen;
-      });
-    }
-  }
+  String _secilenGun = 'Pazartesi';
+  final List<String> _gunler = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
 
   void _kaydet() {
     if (_isimController.text.trim().isEmpty || 
@@ -37,15 +23,13 @@ class _YeniDersEkraniState extends State<YeniDersEkrani> {
       return; 
     }
 
-    String tarihFormatli = "${_secilenTarih.year}-${_secilenTarih.month.toString().padLeft(2, '0')}-${_secilenTarih.day.toString().padLeft(2, '0')}";
-
     widget.dersEkle(
       Ders(
         id: DateTime.now().millisecondsSinceEpoch.toString(), 
         isim: _isimController.text,
-        gun: tarihFormatli, 
+        gun: _secilenGun, // Artık tarih değil, seçilen günü gönderiyoruz
         baslangicSaati: _saatController.text,
-        hazirlikSuresi: 0, // Veritabanı hata vermesin diye sessizce 0 gönderiyoruz
+        hazirlikSuresi: 0, 
       ),
     );
     Navigator.pop(context);
@@ -62,13 +46,17 @@ class _YeniDersEkraniState extends State<YeniDersEkrani> {
             TextField(controller: _isimController, decoration: const InputDecoration(labelText: 'Ders İsmi')),
             const SizedBox(height: 16),
             
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text('Ders Tarihi: ${_secilenTarih.day}/${_secilenTarih.month}/${_secilenTarih.year}', style: const TextStyle(fontSize: 16)),
-              trailing: const Icon(Icons.calendar_month, color: Colors.blue),
-              onTap: _tarihSec,
+            // Gün seçici (Dropdown)
+            DropdownButtonFormField<String>(
+            initialValue: _secilenGun,
+              decoration: const InputDecoration(labelText: 'Ders Günü'),
+              items: _gunler.map((gun) {
+                return DropdownMenuItem(value: gun, child: Text(gun));
+              }).toList(),
+              onChanged: (yeniDeger) {
+                setState(() { _secilenGun = yeniDeger!; });
+              },
             ),
-            const Divider(),
             const SizedBox(height: 16),
             
             TextField(controller: _saatController, decoration: const InputDecoration(labelText: 'Başlama Saati (Örn: 09:30)')),
